@@ -23,33 +23,29 @@ class Solution(object):
         if not s:
             return 0
 
-        container = OrderedDict()
-        max_norepeate = 1
-        first = 0
-        len_s = len(s)
-        stop = False
-        while not stop:
-            container.clear()
-            container[s[first]] = first
-            for j in range(first + 1, len_s):
-                if s[j] not in container:
-                    container[s[j]] = j
-                else:
-                    break
-            
-            cur_len = len(container)
-            # print("{}+{}={}".format(first, cur_len, first+cur_len))
-            # print(len_s)
-            stop = (first + cur_len) >= len_s
+        max_norepeate  = 1
+        left = 0
+        current_len = 0
+        container = {}
+        for i in range(0, len(s)):
+            if (s[i] not in container) or (container[s[i]] < left):
+                container[s[i]] = i
+                current_len += 1
+            else:
+                current_len = i - left
+                left = container[s[i]] + 1
+                container[s[i]] = i
+                max_norepeate = current_len if current_len > max_norepeate else max_norepeate
 
-            first = container[s[j]] + 1
-            max_norepeate = cur_len if cur_len > max_norepeate else max_norepeate
+                current_len = i - left + 1
         
-        return max_norepeate 
+        return current_len if current_len > max_norepeate else max_norepeate
     
 
 if __name__ == "__main__":
     s = Solution()
-    test_str = 'abcabcbb'
+    # test_str = 'aabcabcbbbcabc'
+    test_str = 'pwwkew'
+    print(test_str)
     ans = s.lengthOfLongestSubstring(test_str)
     print(ans)
